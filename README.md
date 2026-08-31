@@ -42,3 +42,4 @@ make link-live WORKFLOW_DIR=/path/to/installed/workflow    # symlink src/ for li
 - [WaniKani for Alfred](https://github.com/aleksgorbenko/alfred-workflow-wanikani)
 - [2Do for Alfred](https://github.com/aleksgorbenko/alfred-workflow-2do)
 - [BunPro for Alfred](https://github.com/aleksgorbenko/alfred-workflow-bunpro)
+- [Bandcamp for Alfred](https://github.com/aleksgorbenko/alfred-workflow-bandcamp)
