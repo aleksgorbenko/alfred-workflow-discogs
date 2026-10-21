@@ -415,7 +415,23 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string></string>
+	<string>Search Discogs releases, artists, labels and masters from Alfred.
+
+Type `dg` and a query to search the Discogs database as you type.
+
+![Discogs search results in Alfred](images/about/main.png)
+
+## Commands
+
+* `dg &lt;query&gt;` - search releases, artists, labels and masters as you type.
+* Enter on an artist, label or master - its releases.
+* Enter on a release - its tracklist.
+* Cmd+Enter - open the item's Discogs page.
+
+## Setup
+
+* Open Configure Workflow and paste a Discogs personal access token (discogs.com/settings/developers) into Discogs API Token.
+</string>
 	<key>uidata</key>
 	<dict>
 		<key>23C00F7D-415D-4B12-887C-1155E68F647C</key>
