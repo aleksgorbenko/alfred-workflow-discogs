@@ -1,6 +1,6 @@
 import urllib.error
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from images import TIMEOUT_SECONDS, warm
 
@@ -8,7 +8,7 @@ CUSTOM_TIMEOUT_SECONDS = 2
 
 
 @patch("images.urllib.request.urlopen")
-def test_warm_returns_local_path_for_each_url(mock_urlopen):
+def test_warm_returns_local_path_for_each_url(mock_urlopen: MagicMock) -> None:
     mock_urlopen.return_value.__enter__.return_value.read.return_value = b"jpegbytes"
     result = warm(["https://img.example.com/a.jpg", "https://img.example.com/b.jpg"])
 
@@ -21,20 +21,20 @@ def test_warm_returns_local_path_for_each_url(mock_urlopen):
         assert Path(path).read_bytes() == b"jpegbytes"
 
 
-def test_warm_skips_none_urls():
+def test_warm_skips_none_urls() -> None:
     result = warm([None, ""])
     assert result == {}
 
 
 @patch("images.urllib.request.urlopen")
-def test_warm_skips_on_download_failure(mock_urlopen):
+def test_warm_skips_on_download_failure(mock_urlopen: MagicMock) -> None:
     mock_urlopen.side_effect = urllib.error.URLError("no network")
     result = warm(["https://img.example.com/broken.jpg"])
     assert result == {}
 
 
 @patch("images.urllib.request.urlopen")
-def test_warm_does_not_redownload_already_cached_url(mock_urlopen):
+def test_warm_does_not_redownload_already_cached_url(mock_urlopen: MagicMock) -> None:
     mock_urlopen.return_value.__enter__.return_value.read.return_value = b"jpegbytes"
     url = "https://img.example.com/cached.jpg"
     first = warm([url])
@@ -47,7 +47,7 @@ def test_warm_does_not_redownload_already_cached_url(mock_urlopen):
 
 
 @patch("images.urllib.request.urlopen")
-def test_warm_sends_user_agent_header(mock_urlopen):
+def test_warm_sends_user_agent_header(mock_urlopen: MagicMock) -> None:
     mock_urlopen.return_value.__enter__.return_value.read.return_value = b"x"
     warm(["https://img.example.com/ua.jpg"])
 
@@ -56,7 +56,7 @@ def test_warm_sends_user_agent_header(mock_urlopen):
 
 
 @patch("images.urllib.request.urlopen")
-def test_warm_uses_default_timeout(mock_urlopen):
+def test_warm_uses_default_timeout(mock_urlopen: MagicMock) -> None:
     mock_urlopen.return_value.__enter__.return_value.read.return_value = b"x"
     warm(["https://img.example.com/default-timeout.jpg"])
 
@@ -64,7 +64,7 @@ def test_warm_uses_default_timeout(mock_urlopen):
 
 
 @patch("images.urllib.request.urlopen")
-def test_warm_uses_custom_timeout(mock_urlopen):
+def test_warm_uses_custom_timeout(mock_urlopen: MagicMock) -> None:
     mock_urlopen.return_value.__enter__.return_value.read.return_value = b"x"
     warm(
         ["https://img.example.com/custom-timeout.jpg"],

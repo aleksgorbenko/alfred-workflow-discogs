@@ -5,18 +5,19 @@ import sys
 import tempfile
 import zipfile
 from pathlib import Path
+from typing import Any
 
 DEFAULT_BUNDLE = Path("dist/Discogs.alfredworkflow")
 JUNK_PATTERNS = ("__pycache__", ".DS_Store", ".pyc", ".git")
 UUID_PATTERN = re.compile(
     r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
 )
-TOKEN_VARIABLE = "DISCOGS_API_TOKEN"
+TOKEN_VARIABLE = "DISCOGS_API_TOKEN"  # noqa: S105
 SOURCE_DIR = "src/dgapi"
 
 
 def _text_files(root: Path) -> list[Path]:
-    files = []
+    files: list[Path] = []
     for path in sorted(root.rglob("*")):
         if not path.is_file():
             continue
@@ -52,8 +53,8 @@ def check_no_junk_files(root: Path) -> list[str]:
     ]
 
 
-def check_token_not_baked_in(plist: dict) -> list[str]:
-    failures = []
+def check_token_not_baked_in(plist: dict[str, Any]) -> list[str]:
+    failures: list[str] = []
     if plist.get("variables"):
         failures.append("plist carries workflow-level variables (may hold a token)")
     for entry in plist.get("userconfigurationconfig", []):
@@ -64,7 +65,7 @@ def check_token_not_baked_in(plist: dict) -> list[str]:
     return failures
 
 
-def check_script_references_resolve(plist: dict, root: Path) -> list[str]:
+def check_script_references_resolve(plist: dict[str, Any], root: Path) -> list[str]:
     return [
         f"missing script {token} referenced by {obj['uid']}"
         for obj in plist["objects"]
@@ -76,7 +77,7 @@ def check_script_references_resolve(plist: dict, root: Path) -> list[str]:
 def check_modules_import(root: Path) -> list[str]:
     modules = sorted(path.stem for path in (root / SOURCE_DIR).glob("*.py"))
     program = "import " + ", ".join(modules)
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: S603
         [sys.executable, "-c", program],
         cwd=root,
         env={
@@ -95,7 +96,7 @@ def check_modules_import(root: Path) -> list[str]:
 
 def verify(bundle: Path) -> int:
     if not bundle.is_file():
-        print(f"bundle not found: {bundle} (run `make build` first)", file=sys.stderr)
+        sys.stderr.write(f"bundle not found: {bundle} (run `make build` first)\n")
         return 1
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -118,11 +119,11 @@ def verify(bundle: Path) -> int:
 
     if failures:
         for failure in failures:
-            print(f"FAIL {failure}", file=sys.stderr)
+            sys.stderr.write(f"FAIL {failure}\n")
         return 1
 
     size_mb = bundle.stat().st_size / 1024 / 1024
-    print(f"verified {bundle} - {file_count} files, {size_mb:.1f} MB")
+    sys.stdout.write(f"verified {bundle} - {file_count} files, {size_mb:.1f} MB\n")
     return 0
 
 

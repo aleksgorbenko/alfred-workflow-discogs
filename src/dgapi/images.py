@@ -1,22 +1,23 @@
 import functools
 import hashlib
-import os
-import tempfile
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
+from typing import TYPE_CHECKING
 
+from cache import PRIVATE_DIRECTORY, cache_dir
 from discogs_api import USER_AGENT
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 TIMEOUT_SECONDS = 5
 MAX_WORKERS = 8
 
 
 def _cache_dir() -> Path:
-    base = os.environ.get("alfred_workflow_cache", tempfile.gettempdir())  # noqa: SIM112
-    path = Path(base) / "covers"
-    path.mkdir(parents=True, exist_ok=True)
+    path = cache_dir() / "covers"
+    path.mkdir(mode=PRIVATE_DIRECTORY, exist_ok=True)
     return path
 
 
@@ -30,9 +31,9 @@ def _fetch_one(url: str, timeout_seconds: int) -> str | None:
     if path.exists():
         return str(path)
 
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})  # noqa: S310
     try:
-        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:  # noqa: S310
             path.write_bytes(response.read())
     except urllib.error.URLError, TimeoutError:
         return None

@@ -1,5 +1,6 @@
 import json
 import sys
+from typing import Any
 
 TYPE_ICONS = {
     "release": "icons/icon_release.png",
@@ -9,15 +10,16 @@ TYPE_ICONS = {
 }
 
 
-def item(
+def item(  # noqa: PLR0913
     title: str,
+    *,
     subtitle: str = "",
     arg: str | None = None,
     valid: bool = True,
     icon: str | None = None,
     variables: dict[str, str] | None = None,
-) -> dict:
-    result: dict = {"title": title, "subtitle": subtitle, "valid": valid}
+) -> dict[str, Any]:
+    result: dict[str, Any] = {"title": title, "subtitle": subtitle, "valid": valid}
     if arg is not None:
         result["arg"] = arg
     if icon is not None:
@@ -27,9 +29,9 @@ def item(
     return result
 
 
-def error_item(message: str) -> dict:
+def error_item(message: str) -> dict[str, Any]:
     return item(title=message, valid=False)
 
 
-def emit(items: list[dict]) -> None:
+def emit(items: list[dict[str, Any]]) -> None:
     json.dump({"items": items}, sys.stdout)

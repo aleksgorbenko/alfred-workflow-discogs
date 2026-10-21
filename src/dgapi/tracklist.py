@@ -1,29 +1,32 @@
 import os
 import sys
+from typing import Any
 
 import discogs_api
-import images
 from alfred_items import emit, error_item, item
 from discogs_api import DiscogsError
+
+import images
 
 DISCOGS_BASE = "https://www.discogs.com"
 TRACK_ICON = "icons/icon_track.png"
 
 
-def _title(track: dict) -> str:
+def _title(track: dict[str, Any]) -> str:
     position = track.get("position", "")
     title = track.get("title", "")
     return f"{position} {title}".strip() if position else title
 
 
-def _cover_icon(release: dict) -> str:
+def _cover_icon(release: dict[str, Any]) -> str:
     thumb = release.get("thumb") or ""
     if not thumb:
         return TRACK_ICON
     return images.warm([thumb]).get(thumb) or TRACK_ICON
 
 
-def _video_items(release: dict, icon: str) -> list[dict]:
+def _video_items(release: dict[str, Any], icon: str) -> list[dict[str, Any]]:
+    videos: list[dict[str, Any]] = release.get("videos") or []
     return [
         item(
             title=video.get("title") or "Video",
@@ -31,14 +34,14 @@ def _video_items(release: dict, icon: str) -> list[dict]:
             arg=video["uri"],
             icon=icon,
         )
-        for video in release.get("videos") or []
+        for video in videos
         if video.get("uri")
     ]
 
 
-def build_items(release: dict) -> list[dict]:
+def build_items(release: dict[str, Any]) -> list[dict[str, Any]]:
     tracklist = release.get("tracklist", [])
-    videos = release.get("videos") or []
+    videos: list[Any] = release.get("videos") or []
     if not tracklist and not videos:
         return [item(title="No tracklist available", valid=False)]
 

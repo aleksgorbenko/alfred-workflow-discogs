@@ -1,35 +1,33 @@
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from typing import TYPE_CHECKING, Any
 
 import discogs_api
-import images
 from alfred_items import TYPE_ICONS, emit, error_item, item
 from discogs_api import DiscogsError
+
+import images
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 DISCOGS_BASE = "https://www.discogs.com"
 DETAIL_WORKERS = 8
 LIVE_TYPING_TIMEOUT_SECONDS = 2
 
 
-def _first(value: list | str | None) -> str:
+def _first(value: list[Any] | str | None) -> str:
     if isinstance(value, list):
         return value[0] if value else ""
     return value or ""
 
 
-def _joined(value: list | str | None) -> str:
-    return ", ".join(value) if isinstance(value, list) else (value or "")
-
-
-def _release_subtitle(entry: dict) -> str:
+def _release_subtitle(entry: dict[str, Any]) -> str:
     year = str(entry.get("year") or entry.get("released") or "")[:4]
-    genre_style = list(
-        dict.fromkeys(
-            (entry.get("genre") or entry.get("genres") or [])
-            + (entry.get("style") or entry.get("styles") or [])
-        )
-    )
+    genres: list[str] = entry.get("genre") or entry.get("genres") or []
+    styles: list[str] = entry.get("style") or entry.get("styles") or []
+    genre_style = list(dict.fromkeys(genres + styles))
     parts = [
         year,
         entry.get("country", ""),
@@ -39,29 +37,32 @@ def _release_subtitle(entry: dict) -> str:
     return "・".join(part for part in parts if part)
 
 
-def _artist_label_subtitle(entry: dict, detail: dict | None) -> str:
+def _artist_label_subtitle(entry: dict[str, Any], detail: dict[str, Any] | None) -> str:
     if not detail:
         return entry["type"].title()
 
     if entry["type"] == "artist":
         return detail.get("realname") or "Artist"
 
-    parent = (detail.get("parent_label") or {}).get("name")
+    parent_label: dict[str, Any] = detail.get("parent_label") or {}
+    parent = parent_label.get("name")
     if parent:
         return f"Sub-label of {parent}"
-    sublabels = detail.get("sublabels") or []
+    sublabels: list[Any] = detail.get("sublabels") or []
     if sublabels:
         return f"{len(sublabels)} sub-labels"
     return "Label"
 
 
-def _subtitle(entry: dict, detail: dict | None) -> str:
+def _subtitle(entry: dict[str, Any], detail: dict[str, Any] | None) -> str:
     if entry["type"] in ("release", "master"):
         return _release_subtitle(entry)
     return _artist_label_subtitle(entry, detail)
 
 
-def _fetch_details(entries: list[dict], token: str) -> dict[str, dict]:
+def _fetch_details(
+    entries: list[dict[str, Any]], token: str
+) -> dict[str, dict[str, Any]]:
     targets = [
         (str(entry["id"]), entry["type"])
         for entry in entries
@@ -70,9 +71,12 @@ def _fetch_details(entries: list[dict], token: str) -> dict[str, dict]:
     if not token or not targets:
         return {}
 
-    details: dict[str, dict] = {}
+    details: dict[str, dict[str, Any]] = {}
     with ThreadPoolExecutor(max_workers=DETAIL_WORKERS) as executor:
-        fetch = {"artist": discogs_api.get_artist, "label": discogs_api.get_label}
+        fetch: dict[str, Callable[[str, str], dict[str, Any]]] = {
+            "artist": discogs_api.get_artist,
+            "label": discogs_api.get_label,
+        }
         future_to_id = {
             executor.submit(fetch[entry_type], entry_id, token): entry_id
             for entry_id, entry_type in targets
@@ -85,7 +89,7 @@ def _fetch_details(entries: list[dict], token: str) -> dict[str, dict]:
     return details
 
 
-def build_items(entries: list[dict], token: str = "") -> list[dict]:
+def build_items(entries: list[dict[str, Any]], token: str = "") -> list[dict[str, Any]]:
     if not entries:
         return [item(title="No results on Discogs", valid=False)]
 
@@ -99,7 +103,7 @@ def build_items(entries: list[dict], token: str = "") -> list[dict]:
             title=entry["title"],
             subtitle=_subtitle(entry, details.get(str(entry["id"]))),
             arg=f"{DISCOGS_BASE}{entry['uri']}",
-            icon=icons.get(entry.get("thumb")) or TYPE_ICONS.get(entry["type"]),
+            icon=icons.get(entry.get("thumb") or "") or TYPE_ICONS.get(entry["type"]),
             variables={"DG_TYPE": entry["type"], "DG_ID": str(entry["id"])},
         )
         for entry in entries

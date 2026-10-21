@@ -5,36 +5,37 @@ requires-python = ">=3.14"
 dependencies = []
 
 [dependency-groups]
-dev = ["pip-audit", "pytest", "ruff"]
+dev = ["pip-audit", "pyright[nodejs]", "pytest", "pytest-cov", "ruff"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src/dgapi"]
 testpaths = ["tests"]
+addopts = "--cov --cov-report=term-missing --cov-fail-under=80"
+filterwarnings = ["error", "ignore:Implicitly cleaning up <HTTPError:ResourceWarning"]
+
+[tool.coverage.run]
+source = ["src"]
+
+[tool.coverage.report]
+exclude_also = ['if __name__ == "__main__":']
 
 [tool.ruff]
 line-length = 88
 target-version = "py314"
 
 [tool.ruff.lint]
-select = [
-    "E",    # pycodestyle errors
-    "F",    # pyflakes (unused imports/vars, undefined names)
-    "I",    # isort (import sorting)
-    "UP",   # pyupgrade (modernize syntax to target-version)
-    "B",    # flake8-bugbear (likely bugs, e.g. closures over loop variables)
-    "SIM",  # flake8-simplify (more idiomatic equivalents)
-    "N",    # pep8-naming
-    "C4",   # flake8-comprehensions
-    "A",    # flake8-builtins (don't shadow builtins)
-    "ARG",  # flake8-unused-arguments
-    "RET",  # flake8-return (return statement issues)
-    "RUF",  # ruff-specific rules
-    "PERF", # perflint (performance anti-patterns)
-    "PLR",  # pylint refactor (includes too-many-branches/statements)
-]
+select = ["ALL"]
+ignore = ["COM812", "CPY", "D"]
 
-[tool.ruff.lint.pylint]
-max-args = 6
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.pyright]
+include = ["src", "tests", "tools"]
+exclude = ["**/vendor", "**/__pycache__", ".venv"]
+extraPaths = ["src/dgapi"]
+pythonVersion = "3.14"
+typeCheckingMode = "strict"

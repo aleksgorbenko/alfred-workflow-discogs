@@ -18,6 +18,7 @@ lint: lint-python lint-data lint-md lint-actions
 
 lint-python:
 	$(RUN) ruff check .
+	$(RUN) pyright
 
 lint-data:
 	plutil -lint info.plist

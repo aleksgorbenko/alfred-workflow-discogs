@@ -1,28 +1,34 @@
 import json
-import os
 import sqlite3
-import tempfile
 import time
-from collections.abc import Callable
-from pathlib import Path
+from contextlib import contextmanager
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Generator
+    from pathlib import Path
+
+from cache import cache_dir
 
 DB_FILENAME = "discogs_details.sqlite3"
 
 
 def _db_path() -> Path:
-    base = os.environ.get("alfred_workflow_cache", tempfile.gettempdir())  # noqa: SIM112
-    path = Path(base)
-    path.mkdir(parents=True, exist_ok=True)
-    return path / DB_FILENAME
+    return cache_dir() / DB_FILENAME
 
 
-def _connect() -> sqlite3.Connection:
+@contextmanager
+def _connect() -> Generator[sqlite3.Connection]:
     conn = sqlite3.connect(_db_path(), timeout=10)
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS cache ("
-        "key TEXT PRIMARY KEY, value TEXT NOT NULL, cached_at REAL NOT NULL)"
-    )
-    return conn
+    try:
+        with conn:
+            conn.execute(
+                "CREATE TABLE IF NOT EXISTS cache ("
+                "key TEXT PRIMARY KEY, value TEXT NOT NULL, cached_at REAL NOT NULL)"
+            )
+            yield conn
+    finally:
+        conn.close()
 
 
 def cached_sqlite[T](key: str, ttl_seconds: int, fetch: Callable[[], T]) -> T:

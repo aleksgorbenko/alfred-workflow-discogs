@@ -3,10 +3,10 @@ import time
 from sqlite_cache import cached_sqlite
 
 
-def test_calls_fetch_on_cache_miss():
-    calls = []
+def test_calls_fetch_on_cache_miss() -> None:
+    calls: list[int] = []
 
-    def fetch():
+    def fetch() -> dict[str, int]:
         calls.append(1)
         return {"value": 1}
 
@@ -16,10 +16,10 @@ def test_calls_fetch_on_cache_miss():
     assert len(calls) == 1
 
 
-def test_reuses_cached_value_within_ttl():
-    calls = []
+def test_reuses_cached_value_within_ttl() -> None:
+    calls: list[int] = []
 
-    def fetch():
+    def fetch() -> dict[str, int]:
         calls.append(1)
         return {"value": len(calls)}
 
@@ -30,10 +30,10 @@ def test_reuses_cached_value_within_ttl():
     assert len(calls) == 1
 
 
-def test_refetches_after_ttl_expires():
-    calls = []
+def test_refetches_after_ttl_expires() -> None:
+    calls: list[int] = []
 
-    def fetch():
+    def fetch() -> dict[str, int]:
         calls.append(1)
         return {"value": len(calls)}
 
@@ -45,7 +45,7 @@ def test_refetches_after_ttl_expires():
     assert len(calls) == expected_calls
 
 
-def test_different_keys_are_cached_independently():
+def test_different_keys_are_cached_independently() -> None:
     result_a = cached_sqlite("key-d", 3600, lambda: {"value": "a"})
     result_b = cached_sqlite("key-e", 3600, lambda: {"value": "b"})
 
@@ -53,7 +53,7 @@ def test_different_keys_are_cached_independently():
     assert result_b == {"value": "b"}
 
 
-def test_stale_value_is_overwritten_not_just_refetched():
+def test_stale_value_is_overwritten_not_just_refetched() -> None:
     cached_sqlite("key-f", ttl_seconds=0, fetch=lambda: {"value": "old"})
     time.sleep(0.01)
     result = cached_sqlite("key-f", ttl_seconds=0, fetch=lambda: {"value": "new"})
