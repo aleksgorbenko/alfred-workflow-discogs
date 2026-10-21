@@ -5,7 +5,7 @@ RUN := uv run --no-sync
 JSON_FILES := $(shell git ls-files '*.json')
 export HOMEBREW_NO_AUTO_UPDATE := 1
 
-.PHONY: setup test lint lint-python lint-data lint-md lint-actions format format-check audit check ci clean build verify release sync-plist link-live
+.PHONY: setup test lint lint-shell lint-python lint-data lint-md lint-actions format format-check audit check ci clean build verify release sync-plist link-live
 
 setup:
 	brew bundle --quiet
@@ -14,7 +14,10 @@ setup:
 test:
 	$(RUN) pytest
 
-lint: lint-python lint-data lint-md lint-actions
+lint: lint-shell lint-python lint-data lint-md lint-actions
+
+lint-shell:
+	shellcheck src/maintenance.sh
 
 lint-python:
 	$(RUN) ruff check .
@@ -56,6 +59,8 @@ build: check
 	cp icons/*.png $(BUILD)/icons/
 	mkdir -p $(BUILD)/images
 	cp -R images/about $(BUILD)/images/
+	mkdir -p $(BUILD)/src
+	cp src/maintenance.sh $(BUILD)/src/
 	cd $(BUILD) && zip -r -q ../$(NAME) .
 	rm -rf $(BUILD)
 	@echo "built $(DIST)/$(NAME)"

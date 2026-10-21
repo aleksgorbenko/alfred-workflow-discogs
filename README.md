@@ -36,6 +36,10 @@ Searches releases, artists, labels, and masters as you type; no Enter needed.
 - Enter on a label/artist/master drills into its releases; Enter on a release shows its tracklist.
 - Cmd+Enter at any point opens that item's Discogs page directly.
 
+### Maintenance
+
+- `:dg` - cache size (Enter reveals the folder) and Empty Cache.
+
 ## Install
 
 1. Download the latest `Discogs.alfredworkflow` from [Releases](https://github.com/aleksgorbenko/alfred-workflow-discogs/releases).

@@ -6,6 +6,19 @@
 	<string>dev.aleksgorbenko.alfred.discogs</string>
 	<key>connections</key>
 	<dict>
+		<key>09F43E19-0644-496E-BA9D-9637AE31B3F9</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>99E74564-71CA-4133-998D-40D28036FEBF</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>23C00F7D-415D-4B12-887C-1155E68F647C</key>
 		<array>
 			<dict>
@@ -25,6 +38,19 @@
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
 				<string>Open in browser</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>99E74564-71CA-4133-998D-40D28036FEBF</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>BCFC9AAD-1FE3-4971-BBFA-120CEA8D5CFE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -413,6 +439,101 @@
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<true/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>:dg</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Loading…</string>
+				<key>script</key>
+				<string>exec /bin/bash src/maintenance.sh --menu "search results, release details and cover art"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>skipuniversalaction</key>
+				<true/>
+				<key>subtext</key>
+				<string>Cache size, empty cache</string>
+				<key>title</key>
+				<string>Discogs Maintenance</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>09F43E19-0644-496E-BA9D-9637AE31B3F9</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>exec /bin/bash src/maintenance.sh "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>99E74564-71CA-4133-998D-40D28036FEBF</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>{const:alfred_workflow_name}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>BCFC9AAD-1FE3-4971-BBFA-120CEA8D5CFE</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Search Discogs releases, artists, labels and masters from Alfred.
@@ -431,9 +552,22 @@ Type `dg` and a query to search the Discogs database as you type.
 ## Setup
 
 * Open Configure Workflow and paste a Discogs personal access token (discogs.com/settings/developers) into Discogs API Token.
+
+## Maintenance
+
+* `:dg` - cache size (Enter reveals the folder) and Empty Cache.
 </string>
 	<key>uidata</key>
 	<dict>
+		<key>09F43E19-0644-496E-BA9D-9637AE31B3F9</key>
+		<dict>
+			<key>note</key>
+			<string>Maintenance: cache size, empty cache</string>
+			<key>xpos</key>
+			<integer>30</integer>
+			<key>ypos</key>
+			<integer>470</integer>
+		</dict>
 		<key>23C00F7D-415D-4B12-887C-1155E68F647C</key>
 		<dict>
 			<key>note</key>
@@ -443,6 +577,13 @@ Type `dg` and a query to search the Discogs database as you type.
 			<key>ypos</key>
 			<integer>40</integer>
 		</dict>
+		<key>99E74564-71CA-4133-998D-40D28036FEBF</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<integer>470</integer>
+		</dict>
 		<key>BB9848C7-1DF8-4DE7-BCD5-5F0CC060338E</key>
 		<dict>
 			<key>note</key>
@@ -451,6 +592,13 @@ Type `dg` and a query to search the Discogs database as you type.
 			<integer>1020</integer>
 			<key>ypos</key>
 			<integer>180</integer>
+		</dict>
+		<key>BCFC9AAD-1FE3-4971-BBFA-120CEA8D5CFE</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<integer>470</integer>
 		</dict>
 		<key>C141E7DF-3552-4938-8B8C-1CCC45E537E3</key>
 		<dict>
