@@ -1,11 +1,7 @@
-from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
 from discogs_api import DiscogsError
-from search import build_items, main
-
-if TYPE_CHECKING:
-    import pytest
+from search import build_items
 
 
 @patch("search.images.warm", return_value={})
@@ -36,13 +32,15 @@ def test_build_items_shape(mock_warm: MagicMock) -> None:
     assert len(items) == 1
     result = items[0]
     assert result["title"] == "Selected Ambient Works"
-    assert result["subtitle"] == "1992・UK・Apollo・Ambient, Techno"
     assert (
-        result["arg"]
-        == "https://www.discogs.com/release/1-Aphex-Twin-Selected-Ambient-Works"
+        result["subtitle"] == "1992・UK・Apollo・Ambient, Techno · ⌥↩ Open in browser"
+    )
+    assert result["valid"] is False
+    assert result["autocomplete"] == "Selected Ambient Works > "
+    assert result["mods"]["alt"]["arg"] == (
+        "https://www.discogs.com/release/1-Aphex-Twin-Selected-Ambient-Works"
     )
     assert result["icon"] == {"path": "/cache/a.jpg"}
-    assert result["variables"] == {"DG_TYPE": "release", "DG_ID": "1"}
 
 
 @patch("search.images.warm", new=MagicMock(return_value={}))
@@ -58,7 +56,7 @@ def test_build_items_master_subtitle_same_as_release() -> None:
         }
     ]
     result = build_items(entries)[0]
-    assert result["subtitle"] == "1959・US"
+    assert result["subtitle"] == "1959・US · ⌥↩ Open in browser"
 
 
 @patch("search.images.warm", new=MagicMock(return_value={}))
@@ -66,8 +64,8 @@ def test_build_items_falls_back_to_type_icon_when_no_thumb() -> None:
     entries = [{"id": 2, "type": "artist", "title": "Aphex Twin", "uri": "/artist/2"}]
     result = build_items(entries)[0]
     assert result["icon"] == {"path": "icons/icon_artist.png"}
-    assert result["variables"] == {"DG_TYPE": "artist", "DG_ID": "2"}
-    assert result["subtitle"] == "Artist"
+    assert result["autocomplete"] == "Aphex Twin > "
+    assert result["subtitle"] == "Artist · ⌥↩ Open in browser"
 
 
 @patch("search.images.warm", new=MagicMock(return_value={}))
@@ -93,7 +91,7 @@ def test_build_items_enriches_artist_row_with_realname(
 ) -> None:
     entries = [{"id": 2, "type": "artist", "title": "Aphex Twin", "uri": "/artist/2"}]
     result = build_items(entries, token="token")[0]
-    assert result["subtitle"] == "Richard D. James"
+    assert result["subtitle"] == "Richard D. James · ⌥↩ Open in browser"
     mock_get_artist.assert_called_once_with("2", "token")
     mock_warm.assert_called_once()
 
@@ -118,28 +116,17 @@ def test_build_items_enriches_label_row_with_parent_label(
 def test_build_items_falls_back_when_artist_detail_fetch_fails() -> None:
     entries = [{"id": 2, "type": "artist", "title": "Aphex Twin", "uri": "/artist/2"}]
     result = build_items(entries, token="token")[0]
-    assert result["subtitle"] == "Artist"
+    assert result["subtitle"] == "Artist · ⌥↩ Open in browser"
 
 
-def test_main_prompts_on_empty_query(capsys: pytest.CaptureFixture[str]) -> None:
-    main([""])
-    out = capsys.readouterr().out
-    assert "Type to search" in out
-
-
-@patch.dict("os.environ", {}, clear=True)
-def test_main_errors_when_token_missing(capsys: pytest.CaptureFixture[str]) -> None:
-    main(["query"])
-    out = capsys.readouterr().out
-    assert "token" in out.lower()
-
-
-@patch.dict("os.environ", {"DISCOGS_API_TOKEN": "token"})
-@patch("search.discogs_api.search", side_effect=DiscogsError("boom"))
-def test_main_surfaces_discogs_error(
-    mock_search: MagicMock, capsys: pytest.CaptureFixture[str]
-) -> None:
-    main(["query"])
-    mock_search.assert_called_once()
-    out = capsys.readouterr().out
-    assert "boom" in out
+@patch("search.images.warm", new=MagicMock(return_value={}))
+def test_repeated_titles_get_distinct_paths() -> None:
+    entries = [
+        {"id": 1, "type": "artist", "title": "Nirvana", "uri": "/artist/1"},
+        {"id": 2, "type": "label", "title": "Nirvana", "uri": "/label/2"},
+    ]
+    rows = build_items(entries)
+    assert [row["autocomplete"] for row in rows] == [
+        "Nirvana (artist) > ",
+        "Nirvana (label) > ",
+    ]

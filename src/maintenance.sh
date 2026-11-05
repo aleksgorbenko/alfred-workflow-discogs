@@ -37,7 +37,7 @@ noun=$([[ "$files" == 1 ]] && printf 'file' || printf 'files')
 
 cat <<JSON
 {"items": [
-  {"title": "${name} cache: ${size}", "subtitle": "${contents}・${files} ${noun}・Enter reveals the folder in Finder", "arg": "--reveal", "icon": {"path": "icon.png"}},
+  {"title": "${name} cache: ${size}", "subtitle": "${contents}・${files} ${noun} · ↩ Reveal in Finder", "arg": "--reveal", "icon": {"path": "icon.png"}},
   {"title": "Empty ${name} Cache", "subtitle": "Delete ${contents}; fetched again when needed", "arg": "--clear", "icon": {"path": "icons/maintenance_clear.png"}}
 ]}
 JSON

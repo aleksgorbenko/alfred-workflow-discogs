@@ -21,7 +21,7 @@
   <a href="#development">Development</a>
 </p>
 
-Type `dg` and a query to search the Discogs database as you type.
+Type `dc` and a query to search the Discogs database as you type.
 
 ![Discogs search results in Alfred](images/about/main.png)
 
@@ -29,16 +29,21 @@ Alfred Workflow to browse [Discogs](https://www.discogs.com) via the [Discogs AP
 
 ## Commands
 
-### `dg <query>` - search the Discogs database
+### `dc <query>` - search the Discogs database
 
-Searches releases, artists, labels, and masters as you type; no Enter needed.
+Searches releases, artists, labels and masters as you type.
 
-- Enter on a label/artist/master drills into its releases; Enter on a release shows its tracklist.
-- Cmd+Enter at any point opens that item's Discogs page directly.
+### Navigation
+
+- `↩` or `⇥` on an artist, label or master opens its releases; on a release opens its tracklist.
+- The path builds up in the search box (`dc Aphex Twin > Drukqs`); delete the last part to go back.
+- The first row of a page is the page itself: `↩` opens it in the browser, `⇥` goes back.
+- Words after a path filter that page.
+- `⌥↩` on any row opens its Discogs page.
 
 ### Maintenance
 
-- `:dg` - cache size (Enter reveals the folder) and Empty Cache.
+- `:dc` - cache size (`↩` reveals the folder) and Empty Cache.
 
 ## Install
 

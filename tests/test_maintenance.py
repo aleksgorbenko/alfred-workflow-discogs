@@ -26,7 +26,8 @@ def test_menu_shows_cache_size_and_file_count(tmp_path: Path) -> None:
     (tmp_path / "b.json").write_text("y")
     rows = json.loads(run(tmp_path, "--menu", "feeds"))["items"]
     assert rows[0]["title"].startswith("Sample cache: ")
-    assert rows[0]["subtitle"].startswith(f"feeds・{FILE_COUNT} files・")
+    expected = f"feeds・{FILE_COUNT} files · ↩ Reveal in Finder"
+    assert rows[0]["subtitle"] == expected
     assert rows[0]["icon"] == {"path": "icon.png"}
     assert rows[1]["title"] == "Empty Sample Cache"
     assert rows[1]["subtitle"] == "Delete feeds; fetched again when needed"

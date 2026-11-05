@@ -23,7 +23,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>F0B35865-DF3D-4E4C-A2CB-D4A87C707EE1</string>
+				<string>BB9848C7-1DF8-4DE7-BCD5-5F0CC060338E</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -35,7 +35,7 @@
 				<key>destinationuid</key>
 				<string>BB9848C7-1DF8-4DE7-BCD5-5F0CC060338E</string>
 				<key>modifiers</key>
-				<integer>1048576</integer>
+				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string>Open in browser</string>
 				<key>vitoclose</key>
@@ -47,117 +47,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>BCFC9AAD-1FE3-4971-BBFA-120CEA8D5CFE</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>C141E7DF-3552-4938-8B8C-1CCC45E537E3</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>EAD12898-5A65-4B1E-AB3F-07EBB5E7B0E1</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>DAA27B34-2809-4AB4-8565-315D98990678</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>E9B811C8-8C73-4389-8993-4187903E60B7</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>E9B811C8-8C73-4389-8993-4187903E60B7</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>BB9848C7-1DF8-4DE7-BCD5-5F0CC060338E</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>EAD12898-5A65-4B1E-AB3F-07EBB5E7B0E1</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>DAA27B34-2809-4AB4-8565-315D98990678</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>BB9848C7-1DF8-4DE7-BCD5-5F0CC060338E</string>
-				<key>modifiers</key>
-				<integer>1048576</integer>
-				<key>modifiersubtext</key>
-				<string>Open in browser</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>F0B35865-DF3D-4E4C-A2CB-D4A87C707EE1</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>C141E7DF-3552-4938-8B8C-1CCC45E537E3</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>sourceoutputuid</key>
-				<string>F25C41C8-70DA-41F9-B9EF-D61F7C4BF41E</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>C141E7DF-3552-4938-8B8C-1CCC45E537E3</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>sourceoutputuid</key>
-				<string>07DD13A9-F72A-4ED2-ACAE-892C1F1AB9BA</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>C141E7DF-3552-4938-8B8C-1CCC45E537E3</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>sourceoutputuid</key>
-				<string>C5E1C286-3DAB-4FD0-954F-9FD3B3B7C357</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>DAA27B34-2809-4AB4-8565-315D98990678</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -193,7 +82,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>dg</string>
+				<string>dc</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -203,15 +92,15 @@
 				<key>queuemode</key>
 				<integer>2</integer>
 				<key>runningsubtext</key>
-				<string>Searching Discogs…</string>
+				<string>Loading Discogs…</string>
 				<key>script</key>
-				<string>python3 src/dgapi/search.py "$1"</string>
+				<string>python3 src/dgapi/app.py "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>dg — live search releases, artists &amp; labels across Discogs</string>
+				<string>dc — search releases, artists, labels &amp; masters; ↩ drills into them</string>
 				<key>title</key>
 				<string>Search Discogs</string>
 				<key>type</key>
@@ -263,199 +152,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string></string>
-				<key>queuedelaycustom</key>
-				<integer>3</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<true/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string>Loading releases…</string>
-				<key>script</key>
-				<string>python3 src/dgapi/browse.py</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string>Releases for the selected label / artist / master</string>
-				<key>title</key>
-				<string>Browse Releases</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>EAD12898-5A65-4B1E-AB3F-07EBB5E7B0E1</string>
-			<key>version</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<true/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<true/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>1</integer>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>keyword</key>
-				<string></string>
-				<key>queuedelaycustom</key>
-				<integer>3</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<true/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string>Loading tracklist…</string>
-				<key>script</key>
-				<string>python3 src/dgapi/tracklist.py</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string>Tracklist for the selected release</string>
-				<key>title</key>
-				<string>Tracklist</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>E9B811C8-8C73-4389-8993-4187903E60B7</string>
-			<key>version</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>conditions</key>
-				<array>
-					<dict>
-						<key>inputstring</key>
-						<string>{var:DG_TYPE}</string>
-						<key>matchcasesensitive</key>
-						<false/>
-						<key>matchmode</key>
-						<integer>0</integer>
-						<key>matchstring</key>
-						<string>label</string>
-						<key>outputlabel</key>
-						<string>label</string>
-						<key>uid</key>
-						<string>F25C41C8-70DA-41F9-B9EF-D61F7C4BF41E</string>
-					</dict>
-					<dict>
-						<key>inputstring</key>
-						<string>{var:DG_TYPE}</string>
-						<key>matchcasesensitive</key>
-						<false/>
-						<key>matchmode</key>
-						<integer>0</integer>
-						<key>matchstring</key>
-						<string>artist</string>
-						<key>outputlabel</key>
-						<string>artist</string>
-						<key>uid</key>
-						<string>07DD13A9-F72A-4ED2-ACAE-892C1F1AB9BA</string>
-					</dict>
-					<dict>
-						<key>inputstring</key>
-						<string>{var:DG_TYPE}</string>
-						<key>matchcasesensitive</key>
-						<false/>
-						<key>matchmode</key>
-						<integer>0</integer>
-						<key>matchstring</key>
-						<string>master</string>
-						<key>outputlabel</key>
-						<string>master</string>
-						<key>uid</key>
-						<string>C5E1C286-3DAB-4FD0-954F-9FD3B3B7C357</string>
-					</dict>
-				</array>
-				<key>elselabel</key>
-				<string>release</string>
-				<key>hideelse</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.conditional</string>
-			<key>uid</key>
-			<string>F0B35865-DF3D-4E4C-A2CB-D4A87C707EE1</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>passthroughargument</key>
-				<false/>
-				<key>variables</key>
-				<dict/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.argument</string>
-			<key>uid</key>
-			<string>C141E7DF-3552-4938-8B8C-1CCC45E537E3</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>passthroughargument</key>
-				<false/>
-				<key>variables</key>
-				<dict/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.argument</string>
-			<key>uid</key>
-			<string>DAA27B34-2809-4AB4-8565-315D98990678</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<true/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<true/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>1</integer>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>keyword</key>
-				<string>:dg</string>
+				<string>:dc</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -536,26 +233,28 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Search Discogs releases, artists, labels and masters from Alfred.
+	<string>## Usage
 
-Type `dg` and a query to search the Discogs database as you type.
+Search Discogs releases, artists, labels and masters via the `dc` keyword.
+
+Type `dc` and a query to search the Discogs database as you type.
 
 ![Discogs search results in Alfred](images/about/main.png)
 
-## Commands
+* `dc &lt;query&gt;` - search releases, artists, labels and masters as you type.
+* &lt;kbd&gt;↩&lt;/kbd&gt; or &lt;kbd&gt;⇥&lt;/kbd&gt; on an artist, label or master - its releases; on a release - its tracklist.
+* The path builds up in the search box (`dc Aphex Twin &gt; Drukqs`); delete the last part to go back.
+* The first row of a page is the page itself: &lt;kbd&gt;↩&lt;/kbd&gt; opens it in the browser, &lt;kbd&gt;⇥&lt;/kbd&gt; goes back.
+* Type after a path to filter that page.
+* &lt;kbd&gt;⌥&lt;/kbd&gt;&lt;kbd&gt;↩&lt;/kbd&gt; - open the item's Discogs page.
 
-* `dg &lt;query&gt;` - search releases, artists, labels and masters as you type.
-* Enter on an artist, label or master - its releases.
-* Enter on a release - its tracklist.
-* Cmd+Enter - open the item's Discogs page.
+### Maintenance
 
-## Setup
+* `:dc` - cache size (&lt;kbd&gt;↩&lt;/kbd&gt; reveals the folder) and Empty Cache.
 
-* Open Configure Workflow and paste a Discogs personal access token (discogs.com/settings/developers) into Discogs API Token.
+## Workflow Configuration
 
-## Maintenance
-
-* `:dg` - cache size (Enter reveals the folder) and Empty Cache.
+Set the Discogs API token in the [Workflow's Configuration](https://www.alfredapp.com/help/workflows/user-configuration/).
 </string>
 	<key>uidata</key>
 	<dict>
@@ -571,7 +270,7 @@ Type `dg` and a query to search the Discogs database as you type.
 		<key>23C00F7D-415D-4B12-887C-1155E68F647C</key>
 		<dict>
 			<key>note</key>
-			<string>dg — live search Discogs database (release/artist/label/master). Enter routes to Conditional to drill down, Cmd+Enter opens the discogs.com page.</string>
+			<string>dc — live search Discogs database (release/artist/label/master). Enter drills down, Option+Enter opens the discogs.com page.</string>
 			<key>xpos</key>
 			<integer>40</integer>
 			<key>ypos</key>
@@ -599,51 +298,6 @@ Type `dg` and a query to search the Discogs database as you type.
 			<integer>500</integer>
 			<key>ypos</key>
 			<integer>470</integer>
-		</dict>
-		<key>C141E7DF-3552-4938-8B8C-1CCC45E537E3</key>
-		<dict>
-			<key>note</key>
-			<string>Clear query before Browse Releases (its arg carried the previous row's url).</string>
-			<key>xpos</key>
-			<integer>540</integer>
-			<key>ypos</key>
-			<integer>40</integer>
-		</dict>
-		<key>DAA27B34-2809-4AB4-8565-315D98990678</key>
-		<dict>
-			<key>note</key>
-			<string>Clear query before Tracklist (fed by dgc/dgw/Browse Releases/Conditional-else, each arg carried the previous row's url).</string>
-			<key>xpos</key>
-			<integer>540</integer>
-			<key>ypos</key>
-			<integer>320</integer>
-		</dict>
-		<key>E9B811C8-8C73-4389-8993-4187903E60B7</key>
-		<dict>
-			<key>note</key>
-			<string>No keyword, chained only, leaf. Shows tracks for the selected release (GET /releases/{id}). Enter on any track opens the discogs.com page.</string>
-			<key>xpos</key>
-			<integer>700</integer>
-			<key>ypos</key>
-			<integer>320</integer>
-		</dict>
-		<key>EAD12898-5A65-4B1E-AB3F-07EBB5E7B0E1</key>
-		<dict>
-			<key>note</key>
-			<string>No keyword, chained only. Lists releases for the selected label/artist/master (GET /labels,/artists,/masters). Own release rows → Tracklist; a master row found inside an artist's releases loops back through Conditional → here again.</string>
-			<key>xpos</key>
-			<integer>700</integer>
-			<key>ypos</key>
-			<integer>40</integer>
-		</dict>
-		<key>F0B35865-DF3D-4E4C-A2CB-D4A87C707EE1</key>
-		<dict>
-			<key>note</key>
-			<string>No keyword. Routes dgs's mixed-type result by DG_TYPE variable: label/artist/master → Browse Releases, else (release) → Tracklist.</string>
-			<key>xpos</key>
-			<integer>380</integer>
-			<key>ypos</key>
-			<integer>40</integer>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>

@@ -1,10 +1,10 @@
-import os
-import sys
 from concurrent.futures import ThreadPoolExecutor
 from typing import TYPE_CHECKING, Any
 
 import discogs_api
-from alfred_items import TYPE_ICONS, emit, error_item, item
+import names
+import router
+from alfred_items import HINT_OPEN, TYPE_ICONS, item, open_mod, with_hint
 from discogs_api import DiscogsError
 
 import images
@@ -89,10 +89,27 @@ def _fetch_details(
     return details
 
 
+def named(
+    entries: list[dict[str, Any]],
+) -> list[tuple[dict[str, Any], str, router.Ref]]:
+    labels = router.unique([(entry["title"], entry["type"]) for entry in entries])
+    return [
+        (entry, label, (entry["type"], str(entry["id"])))
+        for entry, label in zip(entries, labels, strict=True)
+    ]
+
+
 def build_items(entries: list[dict[str, Any]], token: str = "") -> list[dict[str, Any]]:
     if not entries:
         return [item(title="No results on Discogs", valid=False)]
 
+    listed = named(entries)
+    names.remember(
+        {
+            names.path_key((label,)): f"{kind}/{entry_id}"
+            for _entry, label, (kind, entry_id) in listed
+        }
+    )
     icons = images.warm(
         [entry.get("thumb") for entry in entries],
         timeout_seconds=LIVE_TYPING_TIMEOUT_SECONDS,
@@ -101,34 +118,13 @@ def build_items(entries: list[dict[str, Any]], token: str = "") -> list[dict[str
     return [
         item(
             title=entry["title"],
-            subtitle=_subtitle(entry, details.get(str(entry["id"]))),
-            arg=f"{DISCOGS_BASE}{entry['uri']}",
-            icon=icons.get(entry.get("thumb") or "") or TYPE_ICONS.get(entry["type"]),
-            variables={"DG_TYPE": entry["type"], "DG_ID": str(entry["id"])},
+            subtitle=with_hint(
+                _subtitle(entry, details.get(str(entry["id"]))), HINT_OPEN
+            ),
+            valid=False,
+            autocomplete=router.drill("", label),
+            icon=icons.get(entry.get("thumb") or "") or TYPE_ICONS.get(kind),
+            mods=open_mod(f"{DISCOGS_BASE}{entry['uri']}"),
         )
-        for entry in entries
+        for entry, label, (kind, _entry_id) in listed
     ]
-
-
-def main(argv: list[str]) -> None:
-    query = argv[0].strip() if argv else ""
-    if not query:
-        emit([item(title="Type to search Discogs…", valid=False)])
-        return
-
-    token = os.environ.get("DISCOGS_API_TOKEN", "")
-    if not token:
-        emit([error_item("Set your Discogs API Token in the workflow configuration")])
-        return
-
-    try:
-        entries = discogs_api.search(query, token)
-    except DiscogsError as error:
-        emit([error_item(str(error))])
-        return
-
-    emit(build_items(entries, token))
-
-
-if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))

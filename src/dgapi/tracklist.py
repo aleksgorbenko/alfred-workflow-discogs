@@ -1,10 +1,6 @@
-import os
-import sys
 from typing import Any
 
-import discogs_api
-from alfred_items import emit, error_item, item
-from discogs_api import DiscogsError
+from alfred_items import item
 
 import images
 
@@ -59,27 +55,3 @@ def build_items(release: dict[str, Any]) -> list[dict[str, Any]]:
     ]
     items.extend(_video_items(release, icon))
     return items
-
-
-def main() -> None:
-    token = os.environ.get("DISCOGS_API_TOKEN", "")
-    if not token:
-        emit([error_item("Set your Discogs API Token in the workflow configuration")])
-        return
-
-    dg_id = os.environ.get("DG_ID", "")
-    if not dg_id:
-        emit([error_item("No release selected")])
-        return
-
-    try:
-        release = discogs_api.get_release(dg_id, token)
-    except DiscogsError as error:
-        emit([error_item(str(error))])
-        return
-
-    emit(build_items(release))
-
-
-if __name__ == "__main__":
-    sys.exit(main())

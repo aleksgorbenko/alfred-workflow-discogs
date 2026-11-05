@@ -1,11 +1,7 @@
-from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
-from browse import build_items, main
+from browse import build_items
 from discogs_api import DiscogsError
-
-if TYPE_CHECKING:
-    import pytest
 
 
 @patch("browse.images.warm", return_value={})
@@ -34,10 +30,10 @@ def test_build_items_label_entries_are_releases() -> None:
     ]
     result = build_items("label", entries)[0]
     assert result["title"] == "A Release"
-    assert result["subtitle"] == "1999・US・Some Label・Vinyl, LP"
-    assert result["arg"] == "https://www.discogs.com/release/10"
+    assert result["subtitle"] == "1999・US・Some Label・Vinyl, LP · ⌥↩ Open in browser"
+    assert result["mods"]["alt"]["arg"] == "https://www.discogs.com/release/10"
     assert result["icon"] == {"path": "/cache/a.jpg"}
-    assert result["variables"] == {"DG_TYPE": "release", "DG_ID": "10"}
+    assert result["autocomplete"] == "A Release > "
 
 
 @patch("browse.images.warm", new=MagicMock(return_value={}))
@@ -100,14 +96,14 @@ def test_build_items_enriches_release_rows_with_genres_and_styles(
 def test_build_items_falls_back_when_detail_fetch_fails() -> None:
     entries = [{"id": 10, "title": "A Release", "year": 1999}]
     result = build_items("label", entries, token="token")[0]
-    assert result["subtitle"] == "1999"
+    assert result["subtitle"] == "1999 · ⌥↩ Open in browser"
 
 
 @patch("browse.images.warm", new=MagicMock(return_value={}))
 def test_build_items_skips_detail_fetch_without_token() -> None:
     entries = [{"id": 10, "title": "A Release", "year": 1999}]
     result = build_items("label", entries)[0]
-    assert result["subtitle"] == "1999"
+    assert result["subtitle"] == "1999 · ⌥↩ Open in browser"
 
 
 @patch("browse.discogs_api.get_release", return_value={})
@@ -125,8 +121,8 @@ def test_build_items_skips_detail_fetch_for_master_rows(
 def test_build_items_master_entries_are_releases() -> None:
     entries = [{"id": 20, "title": "A Pressing", "year": 2001}]
     result = build_items("master", entries)[0]
-    assert result["arg"] == "https://www.discogs.com/release/20"
-    assert result["variables"] == {"DG_TYPE": "release", "DG_ID": "20"}
+    assert result["mods"]["alt"]["arg"] == "https://www.discogs.com/release/20"
+    assert result["autocomplete"] == "A Pressing > "
 
 
 @patch("browse.images.warm", return_value={})
@@ -137,10 +133,9 @@ def test_build_items_artist_entries_pass_through_own_type(mock_warm: MagicMock) 
     ]
     release_row, master_row = build_items("artist", entries)
     mock_warm.assert_called_once()
-    assert release_row["arg"] == "https://www.discogs.com/release/30"
-    assert release_row["variables"] == {"DG_TYPE": "release", "DG_ID": "30"}
-    assert master_row["arg"] == "https://www.discogs.com/master/40"
-    assert master_row["variables"] == {"DG_TYPE": "master", "DG_ID": "40"}
+    assert release_row["autocomplete"] == "Solo Release > "
+    assert master_row["mods"]["alt"]["arg"] == "https://www.discogs.com/master/40"
+    assert master_row["autocomplete"] == "Grouped Master > "
 
 
 @patch("browse.images.warm", new=MagicMock(return_value={}))
@@ -150,58 +145,8 @@ def test_build_items_joins_artist_prefix_when_present() -> None:
     assert result["title"] == "Some Artist - A Release"
 
 
-@patch.dict("os.environ", {}, clear=True)
-def test_main_errors_when_token_missing(capsys: pytest.CaptureFixture[str]) -> None:
-    main()
-    out = capsys.readouterr().out
-    assert "token" in out.lower()
-
-
-@patch.dict("os.environ", {"DISCOGS_API_TOKEN": "token", "DG_ID": "1"}, clear=True)
-def test_main_errors_on_unrecognized_dg_type(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    main()
-    out = capsys.readouterr().out
-    assert "selection" in out.lower() or "unrecognized" in out.lower()
-
-
-@patch.dict(
-    "os.environ",
-    {"DISCOGS_API_TOKEN": "token", "DG_TYPE": "label"},
-    clear=True,
-)
-def test_main_errors_when_dg_id_missing(capsys: pytest.CaptureFixture[str]) -> None:
-    main()
-    out = capsys.readouterr().out
-    assert "selection" in out.lower() or "unrecognized" in out.lower()
-
-
-@patch.dict(
-    "os.environ",
-    {"DISCOGS_API_TOKEN": "token", "DG_TYPE": "label", "DG_ID": "5"},
-    clear=True,
-)
-@patch("browse.discogs_api.get_label_releases", side_effect=DiscogsError("boom"))
-def test_main_surfaces_discogs_error(
-    mock_get: MagicMock, capsys: pytest.CaptureFixture[str]
-) -> None:
-    main()
-    mock_get.assert_called_once()
-    out = capsys.readouterr().out
-    assert "boom" in out
-
-
-@patch.dict(
-    "os.environ",
-    {"DISCOGS_API_TOKEN": "token", "DG_TYPE": "master", "DG_ID": "7"},
-    clear=True,
-)
-@patch("browse.images.warm", return_value={})
-@patch("browse.discogs_api.get_master_versions", return_value=[])
-def test_main_dispatches_master_to_get_master_versions(
-    mock_get: MagicMock, mock_warm: MagicMock
-) -> None:
-    main()
-    mock_warm.assert_not_called()
-    mock_get.assert_called_once_with("7", "token")
+@patch("browse.images.warm", new=MagicMock(return_value={}))
+def test_build_items_extend_the_current_path() -> None:
+    entries = [{"id": 50, "title": "A Release"}]
+    result = build_items("artist", entries, parent=("Artist",))[0]
+    assert result["autocomplete"] == "Artist > A Release > "

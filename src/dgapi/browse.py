@@ -1,18 +1,16 @@
-import os
-import sys
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
 import discogs_api
-from alfred_items import TYPE_ICONS, emit, error_item, item
+import names
+import router
+from alfred_items import HINT_OPEN, TYPE_ICONS, item, open_mod, with_hint
 from discogs_api import DiscogsError
 
 import images
 
 DISCOGS_BASE = "https://www.discogs.com"
 DETAIL_WORKERS = 8
-
-_FETCHERS = ("label", "artist", "master")
 
 
 def _entry_type(dg_type: str, entry: dict[str, Any]) -> str:
@@ -82,59 +80,59 @@ def _fetch_details(
     return details
 
 
+def _qualifier(entry: dict[str, Any]) -> str:
+    year = _year(entry)
+    return ", ".join(
+        part for part in (str(year) if year else "", entry.get("country", "")) if part
+    )
+
+
+def named(
+    dg_type: str, entries: list[dict[str, Any]]
+) -> list[tuple[dict[str, Any], str, router.Ref]]:
+    ordered = sorted(entries, key=_year, reverse=True)
+    labels = router.unique([(entry["title"], _qualifier(entry)) for entry in ordered])
+    return [
+        (entry, label, (_entry_type(dg_type, entry), str(entry["id"])))
+        for entry, label in zip(ordered, labels, strict=True)
+    ]
+
+
 def build_items(
-    dg_type: str, entries: list[dict[str, Any]], token: str = ""
+    dg_type: str,
+    entries: list[dict[str, Any]],
+    token: str = "",
+    parent: tuple[str, ...] = (),
 ) -> list[dict[str, Any]]:
     if not entries:
         return [item(title="No releases found", valid=False)]
 
-    entries = sorted(entries, key=_year, reverse=True)
-    icons = images.warm([entry.get("thumb") for entry in entries])
-    details = _fetch_details(dg_type, entries, token)
-    items: list[dict[str, Any]] = []
-    for entry in entries:
-        entry_type = _entry_type(dg_type, entry)
-        entry_id = str(entry["id"])
-        items.append(
-            item(
-                title=_title(entry),
-                subtitle=_subtitle(entry, details.get(entry_id)),
-                arg=f"{DISCOGS_BASE}/{entry_type}/{entry_id}",
-                icon=icons.get(entry.get("thumb") or "") or TYPE_ICONS.get(entry_type),
-                variables={"DG_TYPE": entry_type, "DG_ID": entry_id},
-            )
+    listed = named(dg_type, entries)
+    names.remember(
+        {
+            names.path_key((*parent, label)): f"{kind}/{entry_id}"
+            for _entry, label, (kind, entry_id) in listed
+        }
+    )
+    icons = images.warm([entry.get("thumb") for entry, _label, _ref in listed])
+    details = _fetch_details(dg_type, [entry for entry, _label, _ref in listed], token)
+    here = router.path(parent)
+    return [
+        item(
+            title=_title(entry),
+            subtitle=with_hint(_subtitle(entry, details.get(entry_id)), HINT_OPEN),
+            valid=False,
+            autocomplete=router.drill(here, label),
+            icon=icons.get(entry.get("thumb") or "") or TYPE_ICONS.get(kind),
+            mods=open_mod(f"{DISCOGS_BASE}/{kind}/{entry_id}"),
         )
-    return items
+        for entry, label, (kind, entry_id) in listed
+    ]
 
 
-def _fetch(dg_type: str, dg_id: str, token: str) -> list[dict[str, Any]]:
+def fetch(dg_type: str, dg_id: str, token: str) -> list[dict[str, Any]]:
     if dg_type == "label":
         return discogs_api.get_label_releases(dg_id, token)
     if dg_type == "artist":
         return discogs_api.get_artist_releases(dg_id, token)
     return discogs_api.get_master_versions(dg_id, token)
-
-
-def main() -> None:
-    token = os.environ.get("DISCOGS_API_TOKEN", "")
-    if not token:
-        emit([error_item("Set your Discogs API Token in the workflow configuration")])
-        return
-
-    dg_type = os.environ.get("DG_TYPE", "")
-    dg_id = os.environ.get("DG_ID", "")
-    if not dg_id or dg_type not in _FETCHERS:
-        emit([error_item("No selection to browse")])
-        return
-
-    try:
-        entries = _fetch(dg_type, dg_id, token)
-    except DiscogsError as error:
-        emit([error_item(str(error))])
-        return
-
-    emit(build_items(dg_type, entries, token))
-
-
-if __name__ == "__main__":
-    sys.exit(main())

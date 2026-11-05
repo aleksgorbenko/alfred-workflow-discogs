@@ -1,11 +1,7 @@
-from typing import TYPE_CHECKING, Any
+from typing import Any
 from unittest.mock import MagicMock, patch
 
-from discogs_api import DiscogsError
-from tracklist import build_items, main
-
-if TYPE_CHECKING:
-    import pytest
+from tracklist import build_items
 
 
 def test_build_items_empty_tracklist_shows_message() -> None:
@@ -116,35 +112,3 @@ def test_build_items_skips_videos_missing_uri(mock_warm: MagicMock) -> None:
     rows = build_items(release)
     mock_warm.assert_not_called()
     assert len(rows) == 1
-
-
-@patch.dict("os.environ", {}, clear=True)
-def test_main_errors_when_token_missing(capsys: pytest.CaptureFixture[str]) -> None:
-    main()
-    out = capsys.readouterr().out
-    assert "token" in out.lower()
-
-
-@patch.dict("os.environ", {"DISCOGS_API_TOKEN": "token"}, clear=True)
-def test_main_errors_when_dg_id_missing(capsys: pytest.CaptureFixture[str]) -> None:
-    main()
-    out = capsys.readouterr().out
-    assert "release" in out.lower() or "selection" in out.lower()
-
-
-@patch.dict("os.environ", {"DISCOGS_API_TOKEN": "token", "DG_ID": "1"}, clear=True)
-@patch("tracklist.discogs_api.get_release", side_effect=DiscogsError("boom"))
-def test_main_surfaces_discogs_error(
-    mock_get: MagicMock, capsys: pytest.CaptureFixture[str]
-) -> None:
-    main()
-    mock_get.assert_called_once()
-    out = capsys.readouterr().out
-    assert "boom" in out
-
-
-@patch.dict("os.environ", {"DISCOGS_API_TOKEN": "token", "DG_ID": "1"}, clear=True)
-@patch("tracklist.discogs_api.get_release", return_value={"id": 1, "tracklist": []})
-def test_main_dispatches_with_dg_id(mock_get: MagicMock) -> None:
-    main()
-    mock_get.assert_called_once_with("1", "token")

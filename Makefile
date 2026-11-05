@@ -5,11 +5,14 @@ RUN := uv run --no-sync
 JSON_FILES := $(shell git ls-files '*.json')
 export HOMEBREW_NO_AUTO_UPDATE := 1
 
-.PHONY: setup test lint lint-shell lint-python lint-data lint-md lint-actions format format-check audit check ci clean build verify release sync-plist link-live
+.PHONY: icons setup test lint lint-shell lint-python lint-data lint-md lint-actions format format-check audit check ci clean build verify release sync-plist link-live
 
 setup:
 	brew bundle --quiet
 	uv sync --group dev
+
+icons:
+	icon-symbol.sh --batch tools/icons.txt --outdir icons --size 256 --fg "#FFFFFF" --style macos
 
 test:
 	$(RUN) pytest

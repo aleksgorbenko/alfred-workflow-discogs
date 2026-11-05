@@ -1,0 +1,7 @@
+# name symbol background; rendered by make icons
+icon_artist person.fill #333333
+icon_label building.2.fill #333333
+icon_master square.stack.fill #333333
+icon_release opticaldisc.fill #333333
+icon_track music.note #333333
+maintenance_clear trash.fill #FF453A
